@@ -58,7 +58,7 @@ public class GlobalExceptionHandler {
 
         Exception<E> exception = new Exception<>();
         exception.setMessage(message);
-        exception.setPath(request.getDescription(false));
+        exception.setPath(request.getDescription(false).substring(4));
         exception.setCreateTime(new Date());
         exception.setHostName(getHostName());
 
