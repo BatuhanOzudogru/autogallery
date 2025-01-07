@@ -9,12 +9,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
+
 public class ErrorMessage {
 
     private MessageType messageType;
 
     private String ofStatic;
+
+    public ErrorMessage(MessageType messageType, String ofStatic) {
+        this.messageType = messageType;
+        this.ofStatic = ofStatic;
+    }
 
     public String prepareErrorMessage() {
         StringBuilder builder = new StringBuilder();
