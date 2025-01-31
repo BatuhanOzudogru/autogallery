@@ -4,6 +4,7 @@ import com.batuhanozudogru.autogallery.controller.RestAuthenticationController;
 import com.batuhanozudogru.autogallery.controller.RestBaseController;
 import com.batuhanozudogru.autogallery.controller.RootEntity;
 import com.batuhanozudogru.autogallery.dto.AuthRequest;
+import com.batuhanozudogru.autogallery.dto.AuthResponse;
 import com.batuhanozudogru.autogallery.dto.DtoUser;
 import com.batuhanozudogru.autogallery.service.AuthenticationService;
 
@@ -24,5 +25,11 @@ public class RestAuthenticationControllerImpl extends RestBaseController impleme
     @Override
     public RootEntity<DtoUser> register(@Valid @RequestBody AuthRequest request) {
         return ok(authenticationService.register(request));
+    }
+
+    @PostMapping("/authenticate")
+    @Override
+    public RootEntity<AuthResponse> authenticate(@Valid @RequestBody AuthRequest request) {
+        return ok(authenticationService.authenticate(request));
     }
 }
