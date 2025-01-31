@@ -3,6 +3,7 @@ package com.batuhanozudogru.autogallery.service.impl;
 import com.batuhanozudogru.autogallery.dto.AuthRequest;
 import com.batuhanozudogru.autogallery.dto.AuthResponse;
 import com.batuhanozudogru.autogallery.dto.DtoUser;
+import com.batuhanozudogru.autogallery.dto.RefreshTokenRequest;
 import com.batuhanozudogru.autogallery.enums.MessageType;
 import com.batuhanozudogru.autogallery.exception.BaseException;
 import com.batuhanozudogru.autogallery.exception.ErrorMessage;
@@ -91,5 +92,27 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         } catch (Exception e) {
             throw new BaseException(new ErrorMessage(MessageType.USERNAME_OR_PASSWORD_IS_WRONG, e.getMessage()));
         }
+    }
+
+    public boolean isValidRefreshToken(Date expiredDate){
+        return new Date().before(expiredDate);
+    }
+    @Override
+    public AuthResponse refreshToken(RefreshTokenRequest input) {
+        Optional<RefreshToken> optionalRefreshToken = refreshTokenRepository.findByRefreshToken(input.getRefreshToken());
+        if(optionalRefreshToken.isEmpty()){
+            throw new BaseException(new ErrorMessage(MessageType.REFRESH_TOKEN_NOT_FOUND,input.getRefreshToken()));
+        }
+
+        if(!isValidRefreshToken(optionalRefreshToken.get().getExpiryDate())){
+            throw new BaseException(new ErrorMessage(MessageType.REFRESH_TOKEN_EXPIRED,input.getRefreshToken()));
+        }
+        User user = optionalRefreshToken.get().getUser();
+        String accessToken = jwtService.generateToken(user);
+        RefreshToken refreshToken = createRefreshToken(user);
+
+        RefreshToken savedRefreshToken = refreshTokenRepository.save(refreshToken);
+
+        return new AuthResponse(accessToken, savedRefreshToken.getRefreshToken());
     }
 }

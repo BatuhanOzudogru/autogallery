@@ -6,6 +6,7 @@ import com.batuhanozudogru.autogallery.controller.RootEntity;
 import com.batuhanozudogru.autogallery.dto.AuthRequest;
 import com.batuhanozudogru.autogallery.dto.AuthResponse;
 import com.batuhanozudogru.autogallery.dto.DtoUser;
+import com.batuhanozudogru.autogallery.dto.RefreshTokenRequest;
 import com.batuhanozudogru.autogallery.service.AuthenticationService;
 
 import jakarta.validation.Valid;
@@ -31,5 +32,10 @@ public class RestAuthenticationControllerImpl extends RestBaseController impleme
     @Override
     public RootEntity<AuthResponse> authenticate(@Valid @RequestBody AuthRequest request) {
         return ok(authenticationService.authenticate(request));
+    }
+    @PostMapping("/refreshToken")
+    @Override
+    public RootEntity<AuthResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest refreshToken) {
+        return ok(authenticationService.refreshToken(refreshToken));
     }
 }
